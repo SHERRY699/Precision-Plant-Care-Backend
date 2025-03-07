@@ -1,11 +1,37 @@
-import User from "../models/user.js"
-import bcrypt from 'bcrypt'
+import User from "../models/user.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"; 
 
+const createToken = (data) => {
+    return jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "3h" }); 
+};
 
-export  async function LoginController(){
+export async function LoginController(req, res) {
+    const { username, password } = req.body;
 
+    try {
+        const existingUser = await User.findOne({ username }); 
+        if (!existingUser) {
+            return res.status(404).json({ message: "User does not exist" }); 
+        }
+
+        const isMatch = await bcrypt.compare(password, existingUser.password); 
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid Credentials" }); 
+        }
+
+        const token = createToken({ id: existingUser._id, username: existingUser.username });
+
+        return res.status(200).json({
+            message: "Login Successfully",
+            token,
+            user: existingUser, 
+        });
+    } catch (error) {
+        console.error(error); 
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
 }
-
 
 export  async function RegisterController(req, res) {
     try {
