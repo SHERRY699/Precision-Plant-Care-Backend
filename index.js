@@ -46,11 +46,11 @@ app.use(
     })
   );
 
-// Google 
-app.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+// Google Authentication Route
+app.get("/auth/google/callback", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 app.get(
-  "/google/callback",
+  "/auth/google/callback",  
   passport.authenticate("google", {
     failureRedirect: "http://localhost:3000/login", 
   }),
@@ -58,6 +58,7 @@ app.get(
     res.redirect("http://localhost:3000/dashboard"); 
   }
 );
+
 
 app.listen(8000,()=>{
     console.log('Server Is Started')
