@@ -64,3 +64,34 @@ export  async function RegisterController(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+
+export async function LogoutController(req, res) {
+    try {
+        const authHeader = req.headers.authorization; // Check if JWT exists
+
+        if (authHeader) {
+            return res.status(200).json({ message: "Logged out successfully" });
+        }
+
+        if (req.isAuthenticated && req.isAuthenticated()) {
+            req.logout((err) => {
+                if (err) {
+                    return res.status(500).json({ message: "Logout failed", error: err });
+                }
+
+                req.session.destroy((err) => {
+                    if (err) {
+                        return res.status(500).json({ message: "Session destruction failed", error: err });
+                    }
+                    res.clearCookie("connect.sid"); // Clears session cookie
+                    return res.status(200).json({ message: "OAuth Logout successful" });
+                });
+            });
+        } else {
+            return res.status(401).json({ message: "User not logged in" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
