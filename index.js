@@ -4,11 +4,13 @@ import ConnectDb from "./db/db.js";
 import userRoutes from './routes/userRoutes.js'
 import session from "express-session";
 import passport from "./utils/passport.js";
+import cors from 'cors'
 
 const app = express()
 
 // Middlewares
 app.use(express.json())
+app.use(cors({ origin: "*", credentials: true }));
 
 
 //Function Calls 
@@ -19,6 +21,8 @@ ConnectDb()
 
 //Routes 
 app.use('/auth',userRoutes)
+
+
 
 
 // Facebook 
@@ -37,7 +41,7 @@ app.use(
     "/auth/facebook",
     passport.authenticate("facebook", { scope: ["email"] })
   );
-  
+     
   app.get(
     "/auth/facebook/callback",
     passport.authenticate("facebook", {
