@@ -33,9 +33,9 @@ export async function LoginController(req, res) {
     }
 }
 
-export  async function RegisterController(req, res) {
+export async function RegisterController(req, res) {
     try {
-        const { name, username, email, password, role } = req.body;
+        const { name, username, email, password, role = 'user' } = req.body; // Default role to 'user'
 
         const existingUser = await User.findOne({ username });
         if (existingUser) {
@@ -64,6 +64,7 @@ export  async function RegisterController(req, res) {
         return res.status(500).json({ message: error.message });
     }
 }
+
 
 export async function LogoutController(req, res) {
     try {
