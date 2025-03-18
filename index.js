@@ -37,29 +37,36 @@ app.use(
   app.use(passport.session());
   
   // Facebook Login Route
-  app.get(
-    "/auth/facebook",
-    passport.authenticate("facebook", { scope: ["email"] })
-  );
-     
-  app.get(
-    "/auth/facebook/callback",
-    passport.authenticate("facebook", {
-      failureRedirect: "/login",
-      successRedirect: "/dashboard",
-    })
-  );
-
-// Google Authentication Route
-app.get("/auth/google/callback", passport.authenticate("google", { scope: ["profile", "email"] }));
+ // Facebook Login Route
+app.get(
+  "/auth/facebook",
+  passport.authenticate("facebook", { scope: ["email"] })
+);
 
 app.get(
-  "/auth/google/callback",  
-  passport.authenticate("google", {
-    failureRedirect: "http://localhost:3000/login", 
+  "/auth/facebook/callback",
+  passport.authenticate("facebook", {
+    failureRedirect: "/login",
   }),
   (req, res) => {
-    res.redirect("http://localhost:3000/dashboard"); 
+    res.redirect(`myapp://auth-success?token=${req.user.token}`);
+  }
+);
+
+// Google Authentication Route
+// Google Authentication
+app.get("/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "http://localhost:3000/login",
+  }),
+  (req, res) => {
+    // Redirect to mobile app with user data
+    res.redirect(`myapp://auth-success?token=${req.user.token}`);
   }
 );
 
