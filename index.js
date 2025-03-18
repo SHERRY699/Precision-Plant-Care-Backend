@@ -37,27 +37,23 @@ app.use(
   app.use(passport.session());
   
   // Facebook Login Route
- // Facebook Login Route
-app.get(
-  "/auth/facebook",
-  passport.authenticate("facebook", { scope: ["email"] })
-);
-
-app.get(
-  "/auth/facebook/callback",
-  passport.authenticate("facebook", {
-    failureRedirect: "/login",
-  }),
-  (req, res) => {
-    res.redirect(`myapp://auth-success?token=${req.user.token}`);
-  }
-);
+  app.get(
+    "/auth/facebook",
+    passport.authenticate("facebook", { scope: ["email"] })
+  );
+     
+  app.get(
+    "/auth/facebook/callback",
+    passport.authenticate("facebook", {
+      failureRedirect: "http://localhost:3000/login",
+    }),
+    (req, res) => {
+      res.redirect("myapp://auth-success"); // Redirect to React Native app
+    }
+  );
 
 // Google Authentication Route
-// Google Authentication
-app.get("/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
+app.get("/auth/google/callback", passport.authenticate("google", { scope: ["profile", "email"] }));
 
 app.get(
   "/auth/google/callback",
@@ -65,11 +61,9 @@ app.get(
     failureRedirect: "http://localhost:3000/login",
   }),
   (req, res) => {
-    // Redirect to mobile app with user data
-    res.redirect(`myapp://auth-success?token=${req.user.token}`);
+    res.redirect("myapp://auth-success"); // Redirect to React Native app
   }
 );
-
 
 app.listen(8000,()=>{
     console.log('Server Is Started')
