@@ -2,6 +2,7 @@ import { configDotenv } from "dotenv";
 import express from "express";
 import ConnectDb from "./db/db.js";
 import userRoutes from './routes/userRoutes.js'
+import plantRoutes from './routes/plantRoutes.js'
 import session from "express-session";
 import passport from "./utils/passport.js";
 import cors from 'cors'
@@ -21,6 +22,9 @@ ConnectDb()
 
 //Routes 
 app.use('/auth',userRoutes)
+
+// Plants Routes 
+app.use('/plants',plantRoutes)
 
 
 

@@ -1,13 +1,9 @@
-import mongoose from "mongoose";
 
+import mongoose from "mongoose";
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-    },
-    username: {
-      type: String,
-    },
+    name: String,
+    username: String,
     email: {
       type: String,
       required: true,
@@ -22,15 +18,10 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
-    // Add this inside the schema
-    images: [
+    plants: [
       {
-        url: { type: String },
-        BlackSpots: { type: Number },
-        Healthy: { type: Number },
-        LeafCurl: { type: Number },
-        class: { type: String },
-        confidence: { type: Number },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Plant",
       },
     ],
   },
@@ -39,5 +30,4 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
-export default User;
+export  default mongoose.model("User", userSchema);
